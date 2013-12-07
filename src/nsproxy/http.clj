@@ -1,7 +1,21 @@
 
 (ns nsproxy.http
   (:require [clj-http.client :as http]
+            [clojure.string :as string]
             [clojure.tools.logging :refer [debug]]))
+
+(defn- req-headers [req]
+  (select-keys
+    (:headers req)
+    ["user-agent" "soapaction" "content-type"]))
+
+(defn- res-body [config req res]
+  (string/replace
+    (:body res)
+    (re-pattern (:ws-url config))
+    (format "%s://%s"
+            (name (:scheme req))
+            (get-in req [:headers "host"]))))
 
 ;; Public
 ;; ------
@@ -10,7 +24,11 @@
   (let [url (format "%s%s"
                     (:ws-url config)
                     (:uri req))
-        opts {}]
-    (debug "Proxy:" url (pr-str opts))
-    (http/get url opts)))
+        opts {:headers (req-headers req)
+              :content-type "text/xml"
+              :body (slurp (:body req))}
+        res (http/post url opts)]
+    (merge
+      (select-keys res [:status :content-type])
+      {:body (res-body config req res)})))
 

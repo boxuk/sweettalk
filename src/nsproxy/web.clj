@@ -1,9 +1,9 @@
 
 (ns nsproxy.web
   (:require [nsproxy.http :refer [proxy-request]]
+            [clojure.core.async :refer [chan <!! >!!]]
             [clojure.tools.logging :refer [info debug error]]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [clojure.core.async :refer [chan <!! >!!]]))
+            [ring.adapter.jetty :refer [run-jetty]]))
 
 (defn- make-caller [config]
   (fn [req]
@@ -13,23 +13,28 @@
         (error (.getMessage e))))))
 
 (defn- make-handler [config]
-  (let [queue-size (:ws-connections config)
-        queue (chan queue-size)
+  (let [queue (chan (:ws-connections config))
         caller (make-caller config)]
-    (info "Queue size:" queue-size)
     (fn [req]
-      (info "URI:" (:uri req))
-      (debug (pr-str req))
       (>!! queue req)
       (let [res (caller req)]
         (<!! queue)
         res))))
+
+(defn- wrap-logging [handler]
+  (fn [req]
+    (info "URI:" (:uri req))
+    (debug "Request:" (pr-str req))
+    (let [res (handler req)]
+      (debug "Response:" (pr-str res))
+      res)))
 
 ;; Public
 ;; ------
 
 (defn start [config]
   (run-jetty
-    (make-handler config)
+    (wrap-logging
+      (make-handler config))
     {:port (:http-port config)}))
 
