@@ -1,6 +1,6 @@
 
-(ns scotam.nsproxy.web
-  (:require [scotam.nsproxy.http :refer [proxy-request]]
+(ns nsproxy.web
+  (:require [nsproxy.http :refer [proxy-request]]
             [ring.adapter.jetty :refer [run-jetty]]
             [clojure.core.async :refer [chan <!! >!!]]))
 

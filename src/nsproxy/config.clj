@@ -1,5 +1,5 @@
 
-(ns scotam.nsproxy.config
+(ns nsproxy.config
   (:require [confo.core :refer [confo]]))
 
 (def config (confo :nsproxy

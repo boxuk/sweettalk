@@ -1,5 +1,5 @@
 
-(ns scotam.nsproxy.http
+(ns nsproxy.http
   (:require [clj-http.client :as http]))
 
 ;; Public

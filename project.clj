@@ -6,5 +6,5 @@
                  [clj-http "0.7.7"]
                  [rodnaph/confo "0.7.0"]
                  [org.clojure/core.async "0.1.242.0-44b1e3-alpha"]]
-  :main scotam.nsproxy)
+  :main nsproxy.core)
 
