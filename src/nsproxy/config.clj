@@ -3,7 +3,13 @@
   (:require [confo.core :refer [confo]]))
 
 (def config (confo :nsproxy
-                   :wsurl "https://webservices.sandbox.netsuite.com"
-                   :connections 1
-                   :port 8080))
+                   ;; netsuite
+                   :ws-url "https://webservices.sandbox.netsuite.com"
+                   :ws-connections 1
+                   ;; http server
+                   :http-port 8080
+                   ;; logging
+                   :log-level :info
+                   :log-pattern "%m\n"
+                   :log-file "logs/access.log"))
 
