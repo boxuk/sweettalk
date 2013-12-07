@@ -1,10 +1,14 @@
 
-(ns scotam.nsproxy.http)
+(ns scotam.nsproxy.http
+  (:require [clj-http.client :as http]))
 
 ;; Public
 ;; ------
 
-(defn http-proxy [req]
-  {:status 200
-   :body "Proxied!"})
+(defn proxy-request [config req]
+  (let [url (format "%s%s"
+                    (:wsurl config)
+                    (:uri req))
+        opts {}]
+    (http/get url opts)))
 

@@ -19,7 +19,8 @@ This will start a web server on the default port 8080.
 All configuration is handled through environment variables.
 
 ```
-export NSPROXY_CONNECTION=1
-export NSPROXTPORT=80
+export NSPROXY_WSURL="https://webservices.sandbox.netsuite.com"
+export NSPROXY_CONNECTIONS=1
+export NSPROXY_PORT=8080
 ```
 
