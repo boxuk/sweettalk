@@ -9,6 +9,11 @@
     (:headers req)
     ["user-agent" "soapaction" "content-type"]))
 
+(defn- req-method [req]
+  (if (= :post (:request-method req))
+                http/post
+                http/get))
+
 (defn- res-body [config req res]
   (string/replace
     (:body res)
@@ -27,7 +32,7 @@
         opts {:headers (req-headers req)
               :content-type "text/xml"
               :body (slurp (:body req))}
-        res (http/post url opts)]
+        res ((req-method req) url opts)]
     (merge
       (select-keys res [:status :content-type])
       {:body (res-body config req res)})))
