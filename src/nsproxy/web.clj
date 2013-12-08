@@ -3,7 +3,8 @@
   (:require [nsproxy.http :refer [proxy-request]]
             [clojure.core.async :refer [chan <!! >!!]]
             [clojure.tools.logging :refer [info debug error]]
-            [ring.adapter.jetty :refer [run-jetty]]))
+            [ring.adapter.jetty :refer [run-jetty]]
+            [clj-statsd :as stats]))
 
 (defn- make-caller [config]
   (fn [req]
@@ -29,12 +30,21 @@
       (debug "Response:" (pr-str res))
       res)))
 
+(defn- wrap-metrics [handler]
+  (fn [req]
+    (stats/increment
+      :request-count)
+    (stats/with-timing
+      :request-time
+      (handler req))))
+
 ;; Public
 ;; ------
 
 (defn start [config]
   (run-jetty
-    (wrap-logging
-      (make-handler config))
+    (-> (make-handler config)
+      (wrap-metrics)
+      (wrap-logging))
     {:port (:http-port config)}))
 

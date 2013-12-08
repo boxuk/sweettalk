@@ -11,5 +11,8 @@
                    ;; logging
                    :log-level :info
                    :log-pattern "%d [%c: %l %n] %m\n"
-                   :log-file "logs/access.log"))
+                   :log-file "logs/access.log"
+                   ;; statsd
+                   :statsd-host "localhost"
+                   :statsd-port 8126))
 
