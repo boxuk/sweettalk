@@ -1,5 +1,5 @@
 
-(ns nsproxy.http
+(ns sweettalk.http
   (:require [clj-http.client :as http]
             [clojure.string :as string]
             [clojure.tools.logging :refer [debug]]))

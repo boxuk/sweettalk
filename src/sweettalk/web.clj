@@ -1,6 +1,6 @@
 
-(ns nsproxy.web
-  (:require [nsproxy.http :refer [proxy-request]]
+(ns sweettalk.web
+  (:require [sweettalk.http :refer [proxy-request]]
             [clojure.core.async :refer [chan <!! >!!]]
             [clojure.tools.logging :refer [info debug error]]
             [ring.adapter.jetty :refer [run-jetty]]

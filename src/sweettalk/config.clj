@@ -1,8 +1,8 @@
 
-(ns nsproxy.config
+(ns sweettalk.config
   (:require [confo.core :refer [confo]]))
 
-(def config (confo :nsproxy
+(def config (confo :st
                    ;; netsuite
                    :ws-url "https://webservices.sandbox.netsuite.com"
                    :ws-connections 1

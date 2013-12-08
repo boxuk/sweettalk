@@ -1,5 +1,5 @@
 
-# NetSuite API Proxy
+# Sweettalk, NetSuite API Proxy
 
 This is a HTTP server which proxies requests to the NetSuite 'Suitetalk' API,
 handling pooling of concurrent connections to within the users limits.
@@ -19,11 +19,11 @@ This will start a web server on the default port 8080.
 All configuration is handled through environment variables.
 
 ```
-export NSPROXY_WS_URL="https://webservices.sandbox.netsuite.com"
-export NSPROXY_WS_CONNECTIONS=1
-export NSPROXY_HTTP_PORT=8080
-export NSPROXY_LOG_LEVEL="warn"
-export NSPROXY_LOG_PATTERN="%m"
-export NSPROXY_LOG_FILE="logs/access.log"
+export ST_WS_URL="https://webservices.sandbox.netsuite.com"
+export ST_WS_CONNECTIONS=1
+export ST_HTTP_PORT=8080
+export ST_LOG_LEVEL="warn"
+export ST_LOG_PATTERN="%m"
+export ST_LOG_FILE="logs/access.log"
 ```
 

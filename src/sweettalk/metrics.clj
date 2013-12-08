@@ -1,5 +1,5 @@
 
-(ns nsproxy.metrics
+(ns sweettalk.metrics
   (:require [clj-statsd :as stats]))
 
 (defn- configure! [config]
