@@ -10,6 +10,6 @@
                    :http-port 8080
                    ;; logging
                    :log-level :info
-                   :log-pattern "%m\n"
+                   :log-pattern "%d [%c: %l %n] %m\n"
                    :log-file "logs/access.log"))
 
