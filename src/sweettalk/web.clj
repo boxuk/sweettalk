@@ -1,10 +1,21 @@
 
 (ns sweettalk.web
   (:require [sweettalk.http :refer [proxy-request]]
-            [clojure.core.async :refer [chan <!! >!!]]
+            [clojure.core.async :refer [chan take! alt!! timeout]]
             [clojure.tools.logging :refer [info debug error]]
             [ring.adapter.jetty :refer [run-jetty]]
             [clj-statsd :as stats]))
+
+(def sixty-seconds-in-ms (* 60 1000))
+
+(defn- offer [ch msg]
+  (alt!!
+   [[ch msg]] true
+   (timeout sixty-seconds-in-ms) false))
+
+(defn- res-timeout []
+  {:status 500
+   :body "Timeout"})
 
 (defn- make-caller [config]
   (fn [req]
@@ -17,10 +28,11 @@
   (let [queue (chan (:ws-connections config))
         caller (make-caller config)]
     (fn [req]
-      (>!! queue req)
-      (let [res (caller req)]
-        (<!! queue)
-        res))))
+      (if (offer queue req)
+        (let [res (caller req)]
+          (take! queue (constantly nil))
+          res)
+        (res-timeout)))))
 
 (defn- wrap-logging [handler]
   (fn [req]
