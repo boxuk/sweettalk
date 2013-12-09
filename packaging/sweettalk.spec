@@ -1,4 +1,4 @@
-Summary:       NetSuite 'Swwettalk' API Proxy
+Summary:       NetSuite 'Sweettalk' API Proxy
 Name:          sweettalk
 Version:       %{_ver}
 Release:       4
