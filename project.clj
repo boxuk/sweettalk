@@ -12,5 +12,6 @@
                  [clj-statsd "0.3.10"]]
   :plugins [[lein-bin "0.3.2"]]
   :bin {:name "sweettalk"}
+  :jvm-opts ["-Xmx64m"]
   :main sweettalk.core)
 
