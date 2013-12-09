@@ -1,8 +1,7 @@
 
 (ns sweettalk.http
   (:require [clj-http.client :as http]
-            [clojure.string :as string]
-            [clojure.tools.logging :refer [debug]]))
+            [clojure.string :as string]))
 
 (defn- req-headers [req]
   (select-keys
