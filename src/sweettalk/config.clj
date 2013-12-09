@@ -14,5 +14,5 @@
                    :log-file "logs/access.log"
                    ;; statsd
                    :statsd-host "localhost"
-                   :statsd-port 8126))
+                   :statsd-port 8125))
 
