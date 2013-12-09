@@ -36,3 +36,14 @@ export ST_STATSD_HOST="localhost"
 export ST_STATSD_PORT=8126
 ```
 
+## Box UK
+
+Packaging is handled by the standard process, and the app can be configured using the
+above environment variables via:
+
+```
+/etc/sweettalk.conf
+```
+
+Then controlled as a normal service.
+
