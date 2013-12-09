@@ -3,7 +3,8 @@
   (:require [sweettalk.config :refer [config]]
             [sweettalk.web :as web]
             [sweettalk.log :as log]
-            [sweettalk.metrics :as metrics]))
+            [sweettalk.metrics :as metrics])
+  (:gen-class))
 
 (defn- start []
   (log/start config)
