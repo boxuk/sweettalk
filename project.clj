@@ -9,5 +9,7 @@
                  [org.clojure/tools.logging "0.2.6"]
                  [rodnaph/confo "0.7.0"]
                  [clj-statsd "0.3.10"]]
+  :plugins [[lein-bin "0.3.2"]]
+  :bin {:name "sweettalk"}
   :main sweettalk.core)
 
