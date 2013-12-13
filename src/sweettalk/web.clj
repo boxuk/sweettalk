@@ -1,10 +1,10 @@
 
 (ns sweettalk.web
   (:require [sweettalk.http :refer [proxy-request]]
+            [sweettalk.log :refer [wrap-logging]]
+            [sweettalk.metrics :refer [wrap-metrics]]
             [clojure.core.async :refer [chan take! alt!! timeout]]
-            [clojure.tools.logging :refer [info debug error]]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [clj-statsd :as stats]))
+            [ring.adapter.jetty :refer [run-jetty]]))
 
 (def sixty-seconds-in-ms (* 60 1000))
 
@@ -13,16 +13,16 @@
    [[ch msg]] true
    (timeout sixty-seconds-in-ms) false))
 
-(defn- res-timeout []
+(defn- res-error [message]
   {:status 500
-   :body "Timeout"})
+   :body message})
 
 (defn- make-caller [config]
   (fn [req]
     (try
       (proxy-request config req)
       (catch Exception e
-        (error (.getMessage e))))))
+        (res-error (.getMessage e))))))
 
 (defn- make-handler [config]
   (let [queue (chan (:ws-connections config))
@@ -32,23 +32,7 @@
         (let [res (caller req)]
           (take! queue (constantly nil))
           res)
-        (res-timeout)))))
-
-(defn- wrap-logging [handler]
-  (fn [req]
-    (info "URI:" (:uri req))
-    (debug "Request:" (pr-str req))
-    (let [res (handler req)]
-      (debug "Response:" (pr-str res))
-      res)))
-
-(defn- wrap-metrics [handler]
-  (fn [req]
-    (stats/increment
-      :request-count)
-    (stats/with-timing
-      :request-time
-      (handler req))))
+        (res-error "Timeout")))))
 
 ;; Public
 ;; ------

@@ -3,7 +3,7 @@
   (:require [clj-statsd :as stats]
             [fisher.core :refer [general]]))
 
-(def sixty-seconds-ms (* 60 1000))
+(def sixty-seconds-in-ms (* 60 1000))
 
 (defn- configure! [config]
   (stats/setup
@@ -17,10 +17,18 @@
       (let [mem (:memory (general))]
         (stats/gauge :memory-total (:total mem))
         (stats/gauge :memory-free (:free mem)))
-      (Thread/sleep sixty-seconds-ms))))
+      (Thread/sleep sixty-seconds-in-ms))))
 
 ;; Public
 ;; ------
+
+(defn wrap-metrics [handler]
+  (fn [req]
+    (stats/increment
+      :request-count)
+    (stats/with-timing
+      :request-time
+      (handler req))))
 
 (defn start [config]
   (configure! config)
