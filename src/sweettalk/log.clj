@@ -5,6 +5,19 @@
   (:import (org.apache.log4j RollingFileAppender EnhancedPatternLayout)
            (org.apache.log4j.net SyslogAppender)))
 
+(defn- configure! [config]
+  (set-loggers!
+    "sweettalk"
+    {:level (:log-level config)
+     :out (RollingFileAppender.
+            (EnhancedPatternLayout.
+              (:log-pattern config))
+            (:log-file config)
+            true)}
+    "syslog"
+    {:level (:log-level config)
+     :out (SyslogAppender.)}))
+
 ;; Public
 ;; ------
 
@@ -19,15 +32,5 @@
       res)))
 
 (defn start [config]
-  (set-loggers!
-    "sweettalk"
-    {:level (:log-level config)
-     :out (RollingFileAppender.
-            (EnhancedPatternLayout.
-              (:log-pattern config))
-            (:log-file config)
-            true)}
-    "syslog"
-    {:level (:log-level config)
-     :out (SyslogAppender.)}))
+  (configure! config))
 
