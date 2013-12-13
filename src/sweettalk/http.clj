@@ -32,7 +32,7 @@
               :content-type "text/xml"
               :body (slurp (:body req))}
         res ((req-method req) url opts)]
-    (merge
-      (select-keys res [:status :content-type])
-      {:body (res-body config req res)})))
+    {:status (:status res)
+     :headers {"Content-Type" "text/xml;charset=UTF-8"}
+     :body (res-body config req res)}))
 
