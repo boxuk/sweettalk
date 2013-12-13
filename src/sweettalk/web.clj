@@ -13,7 +13,7 @@
    [[ch msg]] true
    (timeout sixty-seconds-in-ms) false))
 
-(defn- res-error [message]
+(defn- error-response [message]
   {:status 500
    :body message})
 
@@ -22,7 +22,8 @@
     (try
       (proxy-request config req)
       (catch Exception e
-        (res-error (.getMessage e))))))
+        (error-response
+          (.getMessage e))))))
 
 (defn- make-handler [config]
   (let [queue (chan (:ws-connections config))
@@ -32,7 +33,7 @@
         (let [res (caller req)]
           (take! queue (constantly nil))
           res)
-        (res-error "Timeout")))))
+        (error-response "Timeout")))))
 
 ;; Public
 ;; ------
