@@ -3,7 +3,7 @@
   (:require [sweettalk.http :refer [proxy-request]]
             [sweettalk.log :refer [wrap-logging]]
             [sweettalk.metrics :refer [wrap-metrics]]
-            [compojure.core :refer [routes GET]]
+            [compojure.core :refer [routes GET context]]
             [compojure.route :refer [not-found]]
             [clojure.core.async :refer [chan take! alt!! timeout]]
             [ring.adapter.jetty :refer [run-jetty]]))
@@ -43,9 +43,13 @@
      :headers {"Content-Type" "application/edn"}
      :body (pr-str config)}))
 
+(defn- internal-routes [config]
+  (context "/_" []
+           (GET "/config" [] (config-handler config))))
+
 (defn- make-handler [config]
   (-> (routes
-        (GET "/_/config" [] (config-handler config))
+        (internal-routes config)
         (not-found (proxy-handler config)))
       (wrap-metrics)
       (wrap-logging)))
