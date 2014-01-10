@@ -3,6 +3,8 @@
   (:require [sweettalk.http :refer [proxy-request]]
             [sweettalk.log :refer [wrap-logging]]
             [sweettalk.metrics :refer [wrap-metrics]]
+            [compojure.core :refer [routes GET]]
+            [compojure.route :refer [not-found]]
             [clojure.core.async :refer [chan take! alt!! timeout]]
             [ring.adapter.jetty :refer [run-jetty]]))
 
@@ -25,7 +27,7 @@
         (error-response
           (.getMessage e))))))
 
-(defn- make-handler [config]
+(defn- proxy-handler [config]
   (let [queue (chan (:ws-connections config))
         caller (make-caller config)]
     (fn [req]
@@ -35,13 +37,24 @@
           res)
         (error-response "Timeout")))))
 
+(defn- config-handler [config]
+  (fn [req]
+    {:status 200
+     :headers {"Content-Type" "application/edn"}
+     :body (pr-str config)}))
+
+(defn- make-handler [config]
+  (-> (routes
+        (GET "/_/config" [] (config-handler config))
+        (not-found (proxy-handler config)))
+      (wrap-metrics)
+      (wrap-logging)))
+
 ;; Public
 ;; ------
 
 (defn start [config]
   (run-jetty
-    (-> (make-handler config)
-      (wrap-metrics)
-      (wrap-logging))
+    (make-handler config)
     {:port (:http-port config)}))
 

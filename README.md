@@ -36,6 +36,19 @@ export ST_STATSD_HOST="localhost"
 export ST_STATSD_PORT=8126
 ```
 
+## Debugging
+
+### Configuration
+
+To view the currently running configuration you can fetch EDN from the following
+endpoint.
+
+```
+/_/config
+```
+
+Endpoints beginning with _ are reserved.
+
 ## Box UK
 
 Packaging is handled by the standard process, and the app can be configured using the
