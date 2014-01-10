@@ -16,6 +16,3 @@
                    :statsd-host "localhost"
                    :statsd-port 8125))
 
-(if (not (:ws-url config))
-  (throw (Exception. "You need to define ST_WS_URL")))
-
