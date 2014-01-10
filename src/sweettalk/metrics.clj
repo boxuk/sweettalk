@@ -1,36 +1,35 @@
 
 (ns sweettalk.metrics
-  (:require [clj-statsd :as stats]
+  (:require [clj-statsd :refer [gauge increment setup with-timing]]
             [fisher.core :refer [general]]))
 
-(def sixty-seconds-in-ms (* 60 1000))
-
 (defn- configure! [config]
-  (stats/setup
+  (setup
     (:statsd-host config)
     (:statsd-port config)
     :prefix "sweettalk."))
 
-(defn- keep-alive []
+(defn- keep-alive [config]
   (future
-    (while true
-      (let [mem (:memory (general))]
-        (stats/gauge :memory-total (:total mem))
-        (stats/gauge :memory-free (:free mem)))
-      (Thread/sleep sixty-seconds-in-ms))))
+    (let [timeout (:statsd-keepalive-timeout config)]
+      (while true
+        (let [mem (:memory (general))]
+          (gauge :memory-total (:total mem))
+          (gauge :memory-free (:free mem)))
+        (Thread/sleep timeout)))))
 
 ;; Public
 ;; ------
 
 (defn wrap-metrics [handler]
   (fn [req]
-    (stats/increment
+    (increment
       :request-count)
-    (stats/with-timing
+    (with-timing
       :request-time
       (handler req))))
 
 (defn start [config]
   (configure! config)
-  (keep-alive))
+  (keep-alive config))
 

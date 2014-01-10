@@ -8,12 +8,10 @@
             [clojure.core.async :refer [chan take! alt!! timeout]]
             [ring.adapter.jetty :refer [run-jetty]]))
 
-(def sixty-seconds-in-ms (* 60 1000))
-
-(defn- offer [ch msg]
+(defn- offer [ch msg ms]
   (alt!!
    [[ch msg]] true
-   (timeout sixty-seconds-in-ms) false))
+   (timeout ms) false))
 
 (defn- error-response [message]
   {:status 500
@@ -29,9 +27,10 @@
 
 (defn- proxy-handler [config]
   (let [queue (chan (:ws-connections config))
+        timeout-ms (:http-timeout config)
         caller (make-caller config)]
     (fn [req]
-      (if (offer queue req)
+      (if (offer queue req timeout-ms)
         (let [res (caller req)]
           (take! queue (constantly nil))
           res)
