@@ -4,7 +4,6 @@
             [sweettalk.log :refer [wrap-logging]]
             [sweettalk.metrics :refer [wrap-metrics]]
             [compojure.core :refer [routes GET context]]
-            [compojure.route :refer [not-found]]
             [clojure.core.async :refer [chan take! alt!! timeout]]
             [ring.adapter.jetty :refer [run-jetty]]))
 
@@ -49,7 +48,7 @@
 (defn- make-handler [config]
   (-> (routes
         (internal-routes config)
-        (not-found (proxy-handler config)))
+        (proxy-handler config))
       (wrap-metrics)
       (wrap-logging)))
 
