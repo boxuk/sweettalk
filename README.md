@@ -49,6 +49,14 @@ endpoint.
 
 Endpoints beginning with _ are reserved.
 
+## Testing
+
+Tests are written with [Midje](https://github.com/marick/Midje).
+
+```
+lein midje
+```
+
 ## Box UK
 
 Packaging is handled by the standard process, and the app can be configured using the
