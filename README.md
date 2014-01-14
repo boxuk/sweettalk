@@ -1,5 +1,5 @@
 
-# Sweettalk, NetSuite API Proxy
+# Sweettalk, NetSuite API Proxy (https://api.travis-ci.org/boxuk/sweettalk.png)](http://travis-ci.org/boxuk/sweettalk) [![Dependencies Status](http://clj-deps.herokuapp.com/github/boxuk/sweettalk/status.png)](http://clj-deps.herokuapp.com/github/boxuk/sweettalk)
 
 This is a HTTP server which proxies requests to the NetSuite 'Suitetalk' API,
 handling pooling of concurrent connections to within the users limits.
