@@ -11,7 +11,10 @@
                  [rodnaph/fisher "0.2.0"]
                  [clj-statsd "0.3.10"]
                  [compojure "1.1.6"]]
-  :plugins [[lein-bin "0.3.2"]]
+  :profiles {:dev {:dependencies [[midje "1.6.0"]
+                                  [clj-http-fake "0.7.8"]]}}
+  :plugins [[lein-bin "0.3.2"]
+            [lein-midje "3.1.3"]]
   :bin {:name "sweettalk"}
   :jvm-opts ["-Xmx64m"]
   :main sweettalk.core)

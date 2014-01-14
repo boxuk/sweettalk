@@ -45,15 +45,15 @@
   (context "/_" []
            (GET "/config" [] (config-handler config))))
 
-(defn- make-handler [config]
+;; Public
+;; ------
+
+(defn make-handler [config]
   (-> (routes
         (internal-routes config)
         (proxy-handler config))
       (wrap-metrics)
       (wrap-logging)))
-
-;; Public
-;; ------
 
 (defn start [config]
   (run-jetty
