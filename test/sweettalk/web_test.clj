@@ -12,9 +12,11 @@
   (let [now (fn [] (.getTime (java.util.Date.)))
         start (now)
         req-concurrent (merge req {:uri "/concurrent"})]
-    (handler req-concurrent)
-    (handler req-concurrent)
-    (- (now) start)))
+    (let [one (future (handler req-concurrent))
+          two (future (handler req-concurrent))]
+      @one
+      @two
+      (- (now) start))))
 
 (with-test-routes
   (facts about-endpoints
